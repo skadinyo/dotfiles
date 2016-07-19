@@ -1,0 +1,3 @@
+[submodule "module/tabbar"]
+	path = module/tabbar
+	url = https://github.com/dholm/tabbar.git
