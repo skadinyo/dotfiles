@@ -1,4 +1,34 @@
+;; override the default keybindings in paredit
+(eval-after-load 'paredit
+  '(progn
+     (define-key paredit-mode-map (kbd "<M-right>") 'paredit-forward)
+     (define-key paredit-mode-map (kbd "<M-left>")  'paredit-backward)
+     (define-key paredit-mode-map (kbd "<M-up>") nil)
+     (define-key paredit-mode-map (kbd "<M-down>")  nil)
+     (define-key paredit-mode-map (kbd "<C-right>")  'move-end-of-line)
+     (define-key paredit-mode-map (kbd "<C-left>")  'move-beginning-of-line)
+     (define-key paredit-mode-map (kbd "M-k") 'paredit-kill)
+     (define-key paredit-mode-map (kbd "M-s") nil)
+
+     (define-key paredit-mode-map (kbd "M-s M-d") 'paredit-forward-slurp-sexp)
+     (define-key paredit-mode-map (kbd "M-s M-a") 'paredit-backward-slurp-sexp)
+
+     (define-key paredit-mode-map (kbd "M-b M-n") 'paredit-forward-barf-sexp)
+     (define-key paredit-mode-map (kbd "M-b M-v") 'paredit-backward-barf-sexp)
+
+     (define-key paredit-mode-map (kbd "M-w M-w") 'paredit-splice-sexp)
+     (define-key paredit-mode-map (kbd "M-w M-e") 'paredit-splice-sexp-killing-backward)
+     (define-key paredit-mode-map (kbd "M-w M-q") 'paredit-splice-sexp-killing-forward)
+
+     ))
+
 ;; Customizations relating to editing a buffer.
+
+(require 'expand-region)
+(global-set-key (kbd "<M-up>") 'er/expand-region)
+(global-set-key (kbd "<M-down>") 'er/contract-region)
+(delete-selection-mode 1)
+
 
 ;; Key binding to use "hippie expand" for text autocompletion
 ;; http://www.emacswiki.org/emacs/HippieExpand
@@ -16,7 +46,7 @@
 (show-paren-mode 1)
 
 ;; Highlight current line
-(global-hl-line-mode 1)
+;;(global-hl-line-mode 1)
 
 ;; Interactive search key bindings. By default, C-s runs
 ;; isearch-forward, so this swaps the bindings.
@@ -50,9 +80,6 @@
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 (global-set-key (kbd "C-;") 'toggle-comment-on-line)
-
-;; yay rainbows!
-(global-rainbow-delimiters-mode t)
 
 ;; use 2 spaces for tabs
 (defun die-tabs ()
