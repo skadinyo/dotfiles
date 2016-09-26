@@ -75,6 +75,8 @@
 (load "setup-clojure.el")
 (load "setup-js.el")
 
+(load "kbd.el")
+(load "intellij.el")
 ;; load tabbar
 ;;(add-to-list 'load-path "~/dotskadinyo/module/tabbar")
 ;;(require 'tabbar)
