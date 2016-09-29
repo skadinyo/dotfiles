@@ -6,6 +6,9 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
+
 (package-initialize)
 
 (add-to-list 'default-frame-alist '(font . "Monospace-14:weight=normal"))
@@ -27,7 +30,8 @@
     projectile
     rainbow-delimiters
     tagedit
-    magit))
+    magit
+    company))
 
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
@@ -43,19 +47,6 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
-
-;; Place downloaded elisp files in ~/.emacs.d/vendor. You'll then be able
-;; to load them.
-;;
-;; For example, if you download yaml-mode.el to ~/.emacs.d/vendor,
-;; then you can add the following code to this file:
-;;
-;; (require 'yaml-mode)
-;; (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-;;
-;; Adding this code will make Emacs enter yaml mode whenever you open
-;; a .yml file
-
 ;;;;
 ;; Customization
 ;;;;
@@ -78,7 +69,13 @@
 (load "kbd.el")
 (load "intellij.el")
 ;; load tabbar
-;;(add-to-list 'load-path "~/dotskadinyo/module/tabbar")
-;;(require 'tabbar)
-;;(tabbar-mode t)
+(add-to-list 'load-path "~/dotskadinyo/module/tabbar")
+(require 'tabbar)
+(tabbar-mode t)
+
+(global-company-mode)
+
+(setq company-idle-delay nil) ; never start completions automatically
+(global-set-key (kbd "M-TAB") #'company-complete) ; use M-TAB, a.k.a. C-M-i, as manual trigger
+(global-set-key (kbd "TAB") #'company-indent-or-complete-common)
 
