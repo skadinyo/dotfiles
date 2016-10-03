@@ -31,7 +31,8 @@
     rainbow-delimiters
     tagedit
     magit
-    company))
+    company
+    undo-tree))
 
 ;; On OS X, an Emacs instance started from the graphical user
 ;; interface will have a different environment than a shell in a
@@ -78,4 +79,3 @@
 (setq company-idle-delay nil) ; never start completions automatically
 (global-set-key (kbd "M-TAB") #'company-complete) ; use M-TAB, a.k.a. C-M-i, as manual trigger
 (global-set-key (kbd "TAB") #'company-indent-or-complete-common)
-

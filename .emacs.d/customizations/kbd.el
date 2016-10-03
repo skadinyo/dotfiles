@@ -24,8 +24,8 @@
      (define-key paredit-mode-map (kbd "M-b M-v") 'paredit-backward-barf-sexp)
 
      (define-key paredit-mode-map (kbd "M-w M-w") 'paredit-splice-sexp)
-     (define-key paredit-mode-map (kbd "M-w M-e") 'paredit-splice-sexp-killing-backward)
-     (define-key paredit-mode-map (kbd "M-w M-q") 'paredit-splice-sexp-killing-forward)
+     (define-key paredit-mode-map (kbd "M-w M-q") 'paredit-splice-sexp-killing-backward)
+     (define-key paredit-mode-map (kbd "M-w M-e") 'paredit-splice-sexp-killing-forward)
 
      ))
 

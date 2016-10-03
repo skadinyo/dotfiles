@@ -30,8 +30,8 @@
 ;;;;
 
 ;; provides minibuffer documentation for the code you're typing into the repl
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
-
+(add-hook 'cider-mode-hook 'turn-on-eldoc-mode)
+(remove-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 ;; go right to the REPL buffer when it's finished connecting
 (setq cider-repl-pop-to-buffer-on-connect t)
 
@@ -81,3 +81,5 @@
      (define-key clojure-mode-map (kbd "C-c u") 'cider-user-ns)
      (define-key cider-mode-map (kbd "C-c u") 'cider-user-ns)))
 
+(setq cider-prompt-save-file-on-load 'always-save)
+(setq cider-evak-result-prefix ";; => ")

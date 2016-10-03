@@ -1,3 +1,7 @@
+(defun intellij-kill-current-buffer ()
+  (interactive)
+  (kill-buffer (buffer-name)))
+
 (defun intellij-send-top-form-to-repl ()
   (interactive)
   (cider-insert-last-sexp-in-repl -1)
@@ -9,7 +13,7 @@
   (indent-region (region-beginning) (region-end))
   (pop-global-mark))
 
-global-undo-tree-mode 1
+(global-undo-tree-mode 1)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 
@@ -26,6 +30,8 @@ global-undo-tree-mode 1
 (global-set-key (kbd "<M-up>") 'er/expand-region)
 (global-set-key (kbd "<M-up>") 'er/expand-region)
 (global-set-key (kbd "<M-up>") 'er/expand-region)
-(global-set-key (kbd "<M-up>") 'er/expand-region)
 (global-set-key (kbd "C-M-l") 'intellij-reformat-code)
 (global-set-key [f12] 'keyboard-escape-quit)
+(global-set-key (kbd "C-w") 'intellij-kill-current-buffer)
+(global-set-key (kbd "M-{") 'tabbar-backward)
+(global-set-key (kbd "M-}") 'tabbar-forward)
