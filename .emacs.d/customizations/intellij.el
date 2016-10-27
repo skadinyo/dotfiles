@@ -13,6 +13,14 @@
   (indent-region (region-beginning) (region-end))
   (pop-global-mark))
 
+(defun indent-marked-files ()
+  (interactive)
+  (dolist (file (dired-get-marked-files))
+    (find-file file)
+    (indent-region (point-min) (point-max))
+    (save-buffer)
+    (kill-buffer nil)))
+
 (global-undo-tree-mode 1)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
@@ -35,3 +43,4 @@
 (global-set-key (kbd "C-w") 'intellij-kill-current-buffer)
 (global-set-key (kbd "M-{") 'tabbar-backward)
 (global-set-key (kbd "M-}") 'tabbar-forward)
+(global-set-key (kbd "M-1") 'other-window)
