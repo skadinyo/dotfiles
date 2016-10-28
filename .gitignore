@@ -9,3 +9,6 @@
 .emacs.d/projectile-bookmarks.el
 .emacs.d/auto-save-list
 .emacs.d/backups
+.emacs.d/.recentf
+.emacs.d/.smex-items
+.emacs.d/projectile-bookmarks.eld

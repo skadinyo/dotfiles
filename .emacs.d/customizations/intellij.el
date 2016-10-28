@@ -21,6 +21,22 @@
     (save-buffer)
     (kill-buffer nil)))
 
+(defun cider-dev>reset ()
+  "dev>(reset). convenient function to reset my clojure development system"
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (insert "(dev/reset)")
+  (cider-repl-return)
+  (cider-switch-to-last-clojure-buffer))
+
+(defun cider-dev>c.t.n.repl/refresh ()
+  "dev>(reset). convenient function to reset my clojure development system"
+  (interactive)
+  (cider-switch-to-repl-buffer)
+  (insert "(clojure.tools.namespace.repl/refresh)")
+  (cider-repl-return)
+  (cider-switch-to-last-clojure-buffer))
+
 (global-undo-tree-mode 1)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
@@ -29,6 +45,7 @@
 (global-set-key (kbd "C-s") 'save-buffer)
 (global-set-key (kbd "C-o") 'ido-find-file)
 (global-set-key (kbd "C-b") 'ido-switch-buffer)
+(global-set-key (kbd "M-x") 'kill-region)
 (global-set-key (kbd "M-c") 'copy-region-as-kill)
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "<C-S-return>") 'other-window)
@@ -44,3 +61,12 @@
 (global-set-key (kbd "M-{") 'tabbar-backward)
 (global-set-key (kbd "M-}") 'tabbar-forward)
 (global-set-key (kbd "M-1") 'other-window)
+(global-set-key (kbd "C-f") 'isearch-forward)
+(global-set-key (kbd "C-F") 'isearch-forward-regexp)
+(global-set-key (kbd "C-v") 'yank)
+(global-set-key (kbd "<home>") 'beginning-of-buffer)
+(global-set-key (kbd "<end>") 'end-of-buffer)
+(global-set-key (kbd "C-M-q") 'save-buffers-kill-terminal)
+(global-set-key (kbd "<insert>") 'cider-dev>reset)
+(global-set-key (kbd "<delete>") 'cider-dev>c.t.n.repl/refresh)
+(global-set-key (kbd "<C-tab>") 'other-window)

@@ -12,6 +12,7 @@
      (define-key paredit-mode-map (kbd "<M-right>") 'paredit-forward)
      (define-key paredit-mode-map (kbd "<M-left>")  'paredit-backward)
      (define-key paredit-mode-map (kbd "<M-up>") nil)
+     (define-key paredit-mode-map (kbd "C-{") nil)
      (define-key paredit-mode-map (kbd "<M-down>")  nil)
      (define-key paredit-mode-map (kbd "<C-right>")  'move-end-of-line)
      (define-key paredit-mode-map (kbd "<C-left>")  'move-beginning-of-line)
@@ -27,6 +28,8 @@
      (define-key paredit-mode-map (kbd "M-w M-q") 'paredit-splice-sexp-killing-backward)
      (define-key paredit-mode-map (kbd "M-w M-e") 'paredit-splice-sexp-killing-forward)
 
+     (define-key paredit-mode-map (kbd "M-d") nil)
+     (define-key paredit-mode-map (kbd "C-d") nil)
      ))
 
 
