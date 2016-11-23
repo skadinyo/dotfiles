@@ -9,8 +9,6 @@
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
 
-(package-initialize)
-
 (add-to-list 'default-frame-alist '(font . "Monospace-14:weight=normal"))
 (set-face-attribute 'default t :font "Monospace-14:weight=normal")
 
@@ -36,6 +34,10 @@
     web-mode
     undo-tree
     solarized-theme
+    material-theme
+    elpy
+    flycheck
+    py-autopep8
     ))
 
 ;; On OS X, an Emacs instance started from the graphical user
@@ -104,3 +106,14 @@
 (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+
+
+(elpy-enable)
+
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
