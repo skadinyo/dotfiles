@@ -26,12 +26,12 @@
 ;; for a more technical explanation.
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
 (add-to-list 'load-path "~/.emacs.d/themes")
-(load-theme 'solarized-dark t)
-
+;; (load-theme 'solarized-dark t)
+(load-theme 'material t)
 ;;solarized conf https://github.com/bbatsov/solarized-emacs
 
-(setq solarized-high-contrast-mode-line t)
-(setq solarized-emphasize-indicators nil)
+;; (setq solarized-high-contrast-mode-line t)
+;; (setq solarized-emphasize-indicators nil)
 
 
 ;; increase font size for better readability
