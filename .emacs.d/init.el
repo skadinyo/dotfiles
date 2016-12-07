@@ -1,6 +1,8 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
+;;PACKAGE
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -8,9 +10,6 @@
 
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
-
-(add-to-list 'default-frame-alist '(font . "Monospace-14:weight=normal"))
-(set-face-attribute 'default t :font "Monospace-14:weight=normal")
 
 (package-initialize)
 
@@ -54,6 +53,52 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+;;PACKAGE
+
+;;UI
+
+;;theme
+(load-theme 'material t)
+
+;;font
+(add-to-list 'default-frame-alist '(font . "PT Mono-14:weight=normal"))
+(set-face-attribute 'default t :font "PT Mono-14:weight=normal")
+
+;; Don't show native OS scroll bars for buffers because they're redundant
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+;;misc
+(blink-cursor-mode 0)
+(setq-default frame-title-format "%b (%f)")
+(global-linum-mode)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+(setq ring-bell-function 'ignore)
+(global-set-key (kbd "s-t") '(lambda () (interactive)))
+
+(setq
+ ;; makes killing/yanking interact with the clipboard
+ x-select-enable-clipboard t
+
+ ;; I'm actually not sure what this does but it's recommended?
+ x-select-enable-primary t
+
+ ;; Save clipboard strings into kill ring before replacing them.
+ ;; When one selects something in another program to paste it into Emacs,
+ ;; but kills something in Emacs before actually pasting it,
+ ;; this selection is gone unless this variable is non-nil
+ save-interprogram-paste-before-kill t
+
+ ;; Shows all options when running apropos. For more info,
+ ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Apropos.html
+ apropos-do-all t
+
+ ;; Mouse yank commands yank at point instead of at click.
+ mouse-yank-at-point t)
+
+;;THEME AND UI
+
 ;;;;
 ;; Customization
 ;;;;
@@ -64,7 +109,7 @@
 (load "shell-integration.el")
 
 (load "navigation.el")
-(load "ui.el")
+;;(load "ui.el")
 (load "editing.el")
 (load "misc.el")
 ;;(load "firacode.el")
@@ -80,7 +125,10 @@
 (add-to-list 'load-path "~/dotskadinyo/module/tabbar")
 (require 'tabbar)
 (tabbar-mode t)
+(global-set-key (kbd "M-[") 'tabbar-backward)
+(global-set-key (kbd "M-]") 'tabbar-forward)
 
+;;company
 (global-company-mode)
 (setq company-idle-delay nil) ; never start completions automatically
 (global-set-key (kbd "M-TAB") #'company-complete) ; use M-TAB, a.k.a. C-M-i, as manual trigger
@@ -109,6 +157,8 @@
 
 
 
+
+;;python dev
 (elpy-enable)
 
 (when (require 'flycheck nil t)

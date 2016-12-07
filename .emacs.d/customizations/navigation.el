@@ -18,7 +18,7 @@
 (setq recentf-save-file (concat user-emacs-directory ".recentf"))
 (require 'recentf)
 (recentf-mode 1)
-(setq recentf-max-menu-items 40)
+(setq recentf-max-menu-items 100)
 
 
 ;; ido-mode allows you to more easily navigate choices. For example,
@@ -60,12 +60,6 @@
 
 ;; projectile everywhere!
 (projectile-global-mode)
-
-
-;;tabbar
-
-(global-set-key (kbd "M-[") 'tabbar-backward)
-(global-set-key (kbd "M-]") 'tabbar-forward)
 
 (require 'repeat)
 (defun make-repeatable-command (cmd)
