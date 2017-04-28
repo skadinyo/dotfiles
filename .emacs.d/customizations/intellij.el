@@ -27,7 +27,8 @@
   (cider-switch-to-repl-buffer)
   (insert "(dev/reset)")
   (cider-repl-return)
-  (cider-switch-to-last-clojure-buffer))
+  ;;(cider-switch-to-last-clojure-buffer)
+  )
 
 (defun cider-dev>c.t.n.repl/refresh ()
   "dev>(reset). convenient function to reset my clojure development system"
@@ -35,9 +36,45 @@
   (cider-switch-to-repl-buffer)
   (insert "(clojure.tools.namespace.repl/refresh)")
   (cider-repl-return)
-  (cider-switch-to-last-clojure-buffer))
+  ;;(cider-switch-to-last-clojure-buffer)
+  )
+
+(defun cider-dev>eval-last-repl-input ()
+  (interactive)
+  )
+
+(defun better-transpose-sexps-up (arg)
+  "mimic move form up cursive"
+  (interactive "*p")
+  (transpose-sexps arg)
+  (paredit-backward)
+  (paredit-backward)
+  ;;(previous-line)
+  )
+
+(defun better-transpose-sexps-down (arg)
+  "mimic move form up cursive"
+  (interactive "*p")
+  (paredit-forward)
+  (transpose-sexps arg)
+  (paredit-backward)
+  ;;(previous-line)
+  )
+
+(defun experiment-repair-all-unused-space ()
+  "experiment stuff"
+  (interactive)
+  (beginning-of-buffer)
+  (while (re-search-forward "[ ]+" nil t)
+    (replace-match " "))
+  (intellij-reformat-code))
+
+"foobar" "as"
+
 
 (global-undo-tree-mode 1)
+(global-set-key (kbd "<C-up>") 'better-transpose-sexps-up)
+(global-set-key (kbd "<C-down>") 'better-transpose-sexps-down)
 (global-set-key (kbd "C-z") 'undo-tree-undo)
 (global-set-key (kbd "C-S-z") 'undo-tree-redo)
 

@@ -1,12 +1,12 @@
 (setq make-backup-files nil)
 (setq auto-save-default nil)
-
+(setq message-log-max nil)
 ;;PACKAGE
 
 (require 'package)
 
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;;(add-to-list 'package-archives
+;;             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/") t)
@@ -122,7 +122,7 @@
 (load "intellij.el")
 
 ;; load tabbar
-(add-to-list 'load-path "~/dotskadinyo/module/tabbar")
+(add-to-list 'load-path "~/dotskadinyo/tabbar")
 (require 'tabbar)
 (tabbar-mode t)
 (global-set-key (kbd "M-[") 'tabbar-backward)

@@ -1,11 +1,3 @@
-;;Overide paredit
-
-(defun paredit-kill-region-or-backward-delete ()
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end))
-    (paredit-backward-delete)))
-
 (eval-after-load 'paredit
   '(progn
      (define-key paredit-mode-map (kbd "<backspace>") 'paredit-kill-region-or-backward-delete)
@@ -30,7 +22,16 @@
 
      (define-key paredit-mode-map (kbd "M-d") nil)
      (define-key paredit-mode-map (kbd "C-d") nil)
-     ))
+     
+     ;;(define-key paredit-mode-map (kbd "<C-down>") (transpose-sexps -1))
+     ;;(define-key paredit-mode-map (kbd "<C-up>") 'transpose-sexps)
+     ));;Override paredit
+
+(defun paredit-kill-region-or-backward-delete ()
+  (interactive)
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end))
+    (paredit-backward-delete)))
 
 
 ;;Expand region
