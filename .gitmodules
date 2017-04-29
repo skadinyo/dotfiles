@@ -1,3 +1,6 @@
 [submodule "module/tabbar"]
 	path = module/tabbar
 	url = https://github.com/dholm/tabbar.git
+[submodule "tabbar"]
+	path = tabbar
+	url = git@github.com:dholm/tabbar.git

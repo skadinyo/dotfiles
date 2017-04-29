@@ -122,7 +122,7 @@
 (load "intellij.el")
 
 ;; load tabbar
-(add-to-list 'load-path "~/dotskadinyo/tabbar")
+(add-to-list 'load-path "~/dotfiles/tabbar")
 (require 'tabbar)
 (tabbar-mode t)
 (global-set-key (kbd "M-[") 'tabbar-backward)
