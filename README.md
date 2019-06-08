@@ -15,4 +15,4 @@ mysql@5.7
 nsq
 ripgrep !IMPORTANT
 htop
-
+git !IMPORTANT
