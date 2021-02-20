@@ -3,22 +3,18 @@
 (require 'package)
 
 (add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
-(add-to-list 'package-archives 
-             '("org" . "http://orgmode.org/elpa/") t)
-;; (add-to-list 'package-archives
-;;              '("melpa" . "http://melpa.milkbox.net/packages/") t)
-;; (add-to-list 'package-archives
-;;              '("marmalade" .
-;;                "http://marmalade-repo.org/packages/"))
+             '("melpa" . "https://melpa.org/packages/") t)
+
+;; let emacs go crazy
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024))
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
 (defvar my-packages
   '(paredit
-    clojure-mode
-    clojure-mode-extra-font-locking))
-
+    ;; clojure-mode
+    ;; clojure-mode-extra-font-locking
+    which-key))
 (package-initialize)
 
 (when (not package-archive-contents)
@@ -31,6 +27,8 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+(require 'which-key)
+(which-key-mode)
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -39,15 +37,14 @@
 (require 'use-package)
 
 (use-package magit
-  :defer t
   :ensure t)
 
 (use-package material-theme
-  :defer t
   :ensure t)
 
 (load-theme 'material t)
 
+;; jschaf/esup: ESUP - Emacs Start Up Profiler - GitHub
 (use-package esup
   :defer t
   :ensure t)
@@ -66,13 +63,11 @@
 
 (use-package multiple-cursors
   :ensure t
-  :defer t
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)))
 
 (use-package highlight-symbol
   :ensure t
-  :defer t
   :init (highlight-symbol-mode)
   :bind (("C-." . highlight-symbol-next)
          ("C-," . highlight-symbol-prev))
@@ -83,57 +78,7 @@
 ;;;;;;;;;;
 ;; Functions
 ;;;;;;;;;;
-
-(defun intellij-kill-current-buffer ()
-  (interactive)
-  (kill-buffer (buffer-name)))
-
-(defun intellij-send-top-form-to-repl ()
-  (interactive)
-  (cider-insert-last-sexp-in-repl -1)
-  (cider-switch-to-last-clojure-buffer))
-
-;; TODO set local key to clojure mode
-(global-set-key (kbd "C-S-p") 'intellij-send-top-form-to-repl)
-
-;; TODO seperate the fns to another file
-(defun cider-dev>reset ()
-  "Convenient function to reset my clojure development system."
-  (interactive)
-  (cider-switch-to-repl-buffer)
-  (insert "(dev/reset)")
-  (cider-repl-return)
-  ;;(cider-switch-to-last-clojure-buffer)
-  )
-
-(defun cider-dev>c.t.n.repl/refresh ()
-  "Convenient function to reset my clojure development system."
-  (interactive)
-  (cider-switch-to-repl-buffer)
-  (insert "(clojure.tools.namespace.repl/refresh)")
-  (cider-repl-return)
-  ;;(cider-switch-to-last-clojure-buffer)
-  )
-
-(defun better-transpose-sexps-up (arg)
-  "Mimic move form up cursive."
-  (interactive "*p")
-  (transpose-sexps arg)
-  (paredit-backward)
-  (paredit-backward)
-  ;;(previous-line)
-  )
-
-(defun better-transpose-sexps-down (arg)
-  "Mimic move form up cursive."
-  (interactive "*p")
-  (paredit-forward)
-  (transpose-sexps arg)
-  (paredit-backward)
-  ;;(previous-line)
-  )
  
-;; comments
 (defun toggle-comment-on-line ()
   "Comment or uncomment current line."
   (interactive)
@@ -141,48 +86,31 @@
 
 (global-set-key (kbd "C-;") 'toggle-comment-on-line)
 
-(defun decode-url ()
-  (interactive)
-  (if (region-active-p)
-      (progn
-        (setq x (decode-coding-string 
-                 (url-unhex-string (buffer-substring (region-beginning) (region-end)))
-                 'utf-8))
-        (delete-region (region-beginning) (region-end))
-        (insert x)))
-  )
-
-(global-set-key (kbd "C-x P") 'isearch-forward)
-
 (defun paredit-kill-region-or-backward-delete ()
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end))
     (paredit-backward-delete)))
 
-(defun simulate-key-press (key)
-  "Pretend that KEY was pressed.
- KEY must be given in `kbd' notation."
-  `(lambda () (interactive)
-     (setq prefix-arg current-prefix-arg)
-     (setq unread-command-events (listify-key-sequence (read-kbd-macro ,key)))))
-
+;; Make buffername unique
 (require 'uniquify)
-
+(setq uniquify-buffer-name-style 'forward)
+(setq uniquify-separator "/")
+(setq uniquify-after-kill-buffer-p t)    ; rename after killing uniquified
+(setq uniquify-ignore-buffers-re "^\\*") ; don't muck with special buffers
+    
 (require 'saveplace)
 
 (electric-pair-mode 1)
 
 ;; TODO make diff-hl only in go, js, elisp project!
 (use-package diff-hl
-  :defer t
   :ensure t
   :init (diff-hl-mode))
 
-(use-package hl-todo
-  :defer t
-  :ensure t
-  :init (global-hl-todo-mode))
+;; (use-package hl-todo
+;;   :ensure t
+;;   :init (global-hl-todo-mode))
 
 (blink-cursor-mode 0)
 (show-paren-mode 1)
@@ -194,13 +122,13 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (tool-bar-mode -1)
 
-(use-package keyfreq
-  :defer t
-  :ensure t
-  :init (keyfreq-mode 1)
-  :config
-  (progn
-    (keyfreq-autosave-mode 1)))
+;; (use-package keyfreq
+;;   :defer t
+;;   :ensure t
+;;   :init (keyfreq-mode 1)
+;;   :config
+;;   (progn
+;;     (keyfreq-autosave-mode 1)))
 
 (use-package recentf
   :defer t
@@ -210,29 +138,24 @@
   (progn 
     (setq 
      recentf-save-file (concat user-emacs-directory ".recentf")
-     recentf-max-menu-items 5)))
+     recentf-max-menu-items 128)))
 
+;; TODO Explore undo-tree. SOme behavior is unexpected
 (use-package undo-tree
   :defer t
   :ensure t
-  :init (global-undo-tree-mode 1)
+  ;; :init (global-undo-tree-mode)
   :bind (("C-z" . undo-tree-undo)
          ("M-z" . undo-tree-undo)
          ("C-S-z" . undo-tree-redo)
          ("M-Z" . undo-tree-redo)))
 
-(use-package linum-relative
-  :defer t
-  :ensure t
-  :config
-  (progn
-    (linum-relative-mode)
-    (setq linum-relative-backend 'display-line-numbers-mode)))
-
 ;; TODO explore more configuration for this powerful package
 (use-package expand-region
   :defer t
   :ensure t
+  :config 
+  (setq expand-region-subword-enabled t)
   :bind (("<M-up>" . er/expand-region)
          ("<M-down>" . er/contract-region)))
 
@@ -252,18 +175,19 @@
  select-enable-primary t
  save-interprogram-paste-before-kill t
  
+ history-length t
+ 
  auto-save-default nil
  ring-bell-function 'ignore
  electric-indent-mode nil
  create-lockfiles nil
  inhibit-startup-message t
  
- uniquify-buffer-name-style 'forward
  scroll-conservatively 10000
  scroll-preserve-screen-position t
  truncate-lines t
  )
-(setq message-log-max 10)
+(setq message-log-max 16)
 
 ;; TODO explore!!
 (use-package smex
@@ -284,30 +208,22 @@
   :init (ido-mode)
   :bind (("C-o" . ido-find-file)
          ("C-b" . ido-switch-buffer))
-  :config
+    :config
   (progn
     (setq 
      ido-enable-flex-matching t
      ido-use-filename-at-point nil
      ido-auto-merge-work-directories-length -1
      ido-use-virtual-buffers t)
-    (add-to-list 'ido-ignore-files "\\.DS_Store"))
-  )
+    (add-to-list 'ido-ignore-files "\\.DS_Store")))
 
 ;; TODO explore!!
 (use-package flx-ido
   :ensure t
-  :defer t
-  :config
-  (progn
-    (ido-mode 1)
-    (ido-everywhere 1)
-    (flx-ido-mode 1)
-    (setq ido-enable-flex-matching t)
-    (setq ido-use-faces nil)))
+  :defer t)
 
 ;; TODO explore!!
-(use-package ido-ubiquitous
+(use-package ido-completing-read+
   :ensure t
   :defer t
   :init (ido-ubiquitous-mode 1))
@@ -318,25 +234,16 @@
   :defer t
   :config 
   (progn
-    (setq company-idle-delay nil
-          company-require-match nil)
+    (setq company-idle-delay 0.5
+          company-minimum-prefix-length 1)
     (setq company-tooltip-align-annotations t
           ;; Easy navigation to candidates with M-<n>
           company-show-numbers t)
     ;; (setq company-dabbrev-downcase nil)
     )
   :bind (("M-TAB" . company-complete)
-         ("TAB" . company-indent-or-complete-common)))
-
-;; (use-package company-quickhelp          ; Documentation popups for Company
-;;   :ensure t
-;;   :defer t
-;;   :init (add-hook 'global-company-mode-hook #'company-quickhelp-mode))
-
-;; Benchmarking
-(use-package esup
-  :ensure t
-  :defer t)
+         ("TAB" . company-indent-or-complete-common)
+         ))
 
 ;; TODO make flycheck only in go, js, elisp project!
 (use-package flycheck
@@ -345,8 +252,7 @@
   :defer t
   :config
   (progn
-    (setq flycheck-highlighting-mode 'lines)
-    ))
+    (setq flycheck-highlighting-mode 'lines)))
 
 ;; Crazy fast grep alternative
 (use-package rg
@@ -376,11 +282,12 @@
 (global-set-key (kbd "C-v") 'yank)
 (global-set-key (kbd "<home>") 'beginning-of-buffer)
 (global-set-key (kbd "<end>") 'end-of-buffer)
+(global-set-key (kbd "C-c C-l") 'isearch-forward)
 
 ;; TODO move to clojure/cider mode 
-(global-set-key (kbd "C-S-l") 'cider-load-buffer)
-(global-set-key (kbd "C-S-n") 'cider-repl-set-ns)
-(global-set-key (kbd "C-S-p") 'intellij-send-top-form-to-repl)
+;; (global-set-key (kbd "C-S-l") 'cider-load-buffer)
+;; (global-set-key (kbd "C-S-n") 'cider-repl-set-ns)
+;; (global-set-key (kbd "C-S-p") 'intellij-send-top-form-to-repl)
 ;; (global-set-key (kbd "<f5>") 'cider-dev>reset)
 ;; (global-set-key (kbd "<f6>") 'cider-dev>c.t.n.repl/refresh)
 
@@ -420,55 +327,79 @@
 ;; Go Mode
 ;;;;;;;;;;
 
-(setenv "GOPATH" "/Users/skadinyo/Projects/go")
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize)
+  (exec-path-from-shell-copy-env "GOPATH"))
+
 (defun my-go-mode-hook ()
-  (setq tab-width 2)
-  (setq standard-indent 2) 
+  (setq tab-width 1)
+  (setq standard-indent ) 
   (setq indent-tabs-mode nil)
+  (setq gofmt-command "goimports")
   (add-hook 'before-save-hook 'gofmt-before-save)
   (add-hook 'go-mode-hook 'subword-mode))
 
-;; TODO Explore go-eldoc
-
-;; FIXME indentation won't work if put in use-package config
-;; Don't know why.
 (use-package go-mode
   :ensure t
-  :defer t
-  :mode "\\.go$"
-  :bind (("M-." . godef-jump)
-         ("M-," . godef-jump-other-window)
-         ("M-p" . compile) 
-         ("M-P" . recompile)
-         ("<C-right>" . move-end-of-line)
-         ("<C-left>" . move-beginning-of-line)
-         )
-  :config
-  (add-hook 'go-mode-hook 'my-go-mode-hook)
-  (add-hook 'before-save-hook 'gofmt-before-save)
-  (add-hook 'go-mode-hook 'subword-mode)
-  )
+  :defer t)
 
-(use-package company-go
+(use-package company-quickhelp
   :ensure t
   :defer t
-  :init
-  (with-eval-after-load 'company
-    (add-to-list 'company-backends 'company-go)))
+  :config
+  (company-quickhelp-mode))
 
+(use-package lsp-mode
+  :ensure t
+  :commands (lsp lsp-deferred)
+  :hook (go-mode . lsp-deferred))
+(with-eval-after-load 'lsp-mode
+  (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration))
+(setq lsp-keymap-prefix "M-p")
+(setq lsp-keep-workspace-alive t)
+
+;; Set up before-save hooks to format buffer and add/delete imports.
+;; Make sure you don't have other gofmt/goimports hooks enabled.
+(defun lsp-go-install-save-hooks ()
+  (add-hook 'before-save-hook #'lsp-format-buffer t t)
+  (add-hook 'before-save-hook #'lsp-organize-imports t t))
+(add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+;; Optional - provides fancier overlays.
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+;; Company mode is a standard completion package that works well with lsp-mode.
+(use-package company
+  :ensure t
+  :config
+  ;; Optionally enable completion-as-you-type behavior.
+  (setq company-idle-delay 1)
+  (setq company-minimum-prefix-length 1))
+
+;; company-lsp integrates company mode completion with lsp-mode.
+;; completion-at-point also works out of the box but doesn't support snippets.
+(use-package company-lsp
+  :ensure t
+  :commands company-lsp)
+
+(use-package rainbow-delimiters
+  :ensure t
+  :defer t)
 
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'prog-mode-hook 'hl-line-mode)
 (add-hook 'prog-mode-hook 'diff-hl-mode)
 
-(use-package go-eldoc
-  :ensure t
-  :config 
-  (add-hook 'go-mode-hook 'go-eldoc-setup)
-  (set-face-attribute 'eldoc-highlight-function-argument nil
-                    :underline t :foreground "green"
-                    :weight 'bold)
-  )
+;; (use-package go-eldoc
+;;   :ensure t
+;;   :config 
+;;   (add-hook 'go-mode-hook 'go-eldoc-setup)
+;;   (set-face-attribute 'eldoc-highlight-function-argument nil
+;;                     :underline t :foreground "green"
+;;                     :weight 'bold)
+;;   )
 
 ;;;;;;;;;;
 ;; Paredit
@@ -564,7 +495,6 @@
 
 (use-package js2-refactor
   :ensure t
-  :defer t
   
   :config
   (progn
@@ -572,6 +502,54 @@
     (add-hook 'rjsx-mode #'js2-refactor-mode)
     (js2r-add-keybindings-with-prefix "C-j")
     ))
+
+(use-package yaml-mode
+  :ensure t)
+
+;; (use-package yasnippet
+;;   :ensure t
+;;   :bind (("M-TAB" . yas-expand)))
+
+;; (use-package yasnippet-snippets
+;;   :ensure t)
+;; (add-hook 'prog-mode-hook #'yas-minor-mode)
+
+
+;; (defun check-expansion ()
+;;     (save-excursion
+;;       (if (looking-at "\\_>") t
+;;         (backward-char 1)
+;;         (if (looking-at "\\.") t
+;;           (backward-char 1)
+;;           (if (looking-at "->") t nil)))))
+
+;;   (defun do-yas-expand ()
+;;     (let ((yas/fallback-behavior 'return-nil))
+;;       (yas/expand)))
+
+;;   (defun tab-indent-or-complete ()
+;;     (interactive)
+;;     (if (minibufferp)
+;;         (minibuffer-complete)
+;;       (if (or (not yas/minor-mode)
+;;               (null (do-yas-expand)))
+;;           (if (check-expansion)
+;;               (company-complete-common)
+;;             (indent-for-tab-command)))))
+
+;;   (global-set-key [tab] 'tab-indent-or-complete)
+;; ;; Add yasnippet support for all company backends
+;; ;; https://github.com/syl20bnr/spacemacs/pull/179
+;; (defvar company-mode/enable-yas t
+;;   "Enable yasnippet for all backends.")
+
+;; (defun company-mode/backend-with-yas (backend)
+;;   (if (or (not company-mode/enable-yas) (and (listp backend) (member 'company-yasnippet backend)))
+;;       backend
+;;     (append (if (consp backend) backend (list backend))
+;;             '(:with company-yasnippet))))
+
+;; (setq company-backends (mapcar #'company-mode/backend-with-yas company-backends))
 
 ;; (use-package discover-js2-refactor
 ;;   :ensure t)
@@ -599,59 +577,16 @@
   :defer t
   :ensure t)
 
-;; (require 'ansi-color)
-;; (defun my/ansi-colorize-buffer ()
-;;   (let ((buffer-read-only nil))
-;;     (ansi-color-apply-on-region (point-min) (point-max))))
-;; (add-hook 'compilation-filter-hook 'my/ansi-colorize-buffer)
-;; (add-hook 'git-commit-setup-hook 'my/ansi-colorize-buffer)
+;; (use-package all-the-icons)
+;; (use-package all-the-icons-dired)
 
-(global-set-key (kbd "C-SPC") 'ace-jump-mode)
-
-(use-package elpy
-  :defer t
-  :ensure t
-  :init
-  (elpy-enable))
-
-;; todo dumbjump
-
-;; TODO Will try projectile again some other time.
-
-;; (use-package projectile
-;;   :init (projectile-global-mode)
-;;   :ensure t
+;; (use-package elpy
 ;;   :defer t
-;;   ;;Still don't know how to use bind for simulate-key-press function
-;;   ;;:bind (("C-p" . (simulate-key-press "C-c p")))
-;;   :config
-;;   ;; (projectile-project-root)
-;;   ;; (setq projectile-indexing-method 'native)
-;;   (progn
-;;     (setq projectile-globally-ignored-directories
-;;           (append '(
-;;                     ".git"
-;;                     ".svn"
-;;                     "out"
-;;                     "repl"
-;;                     "target"
-;;                     "venv"
-;;                     "node_modules"
-;;                     )
-;;                   projectile-globally-ignored-directories))
-;;     (setq projectile-globally-ignored-files
-;;           (append '(
-;;                     ".DS_Store"
-;;                     "*.gz"
-;;                     "*.pyc"
-;;                     "*.jar"
-;;                     "*.tar.gz"
-;;                     "*.tgz"
-;;                     "*.zip"
-;;                     )
-;;                   projectile-globally-ignored-files))
-;;     (setq projectile-enable-caching t)
-;;     (global-set-key (kbd "C-p") (simulate-key-press "C-c p")))  )
+;;   :ensure t
+;;   :init
+;;   (elpy-enable))
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -659,7 +594,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (magit rainbow-delimiters material-theme elpy ace-jump-mode mode-icons js2-refactor rjsx-mode nyan-mode add-node-modules-path prettier-js go-eldoc company-go go-mode web-mode rg flycheck company ido-ubiquitous flx-ido smex expand-region linum-relative undo-tree keyfreq hl-todo diff-hl highlight-symbol multiple-cursors nginx-mode esup use-package clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell))))
+    (protobuf-mode php-mode hcl-mode git-link go-mode mode-icons yaml-mode js2-refactor rjsx-mode nyan-mode add-node-modules-path prettier-js rainbow-delimiters company-lsp lsp-ui lsp-mode company-quickhelp web-mode rg flycheck company ido-completing-read+ flx-ido smex expand-region undo-tree hl-todo diff-hl highlight-symbol multiple-cursors nginx-mode esup material-theme magit use-package which-key clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
