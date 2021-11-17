@@ -6,7 +6,7 @@
              '("melpa" . "https://melpa.org/packages/") t)
 
 ;; let emacs go crazy
-(setq gc-cons-threshold 100000000)
+(setq gc-cons-threshold 50000000)
 (setq read-process-output-max (* 1024 1024))
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 
@@ -577,6 +577,8 @@
   :defer t
   :ensure t)
 
+(setq js-indent-level 2)
+
 ;; (use-package all-the-icons)
 ;; (use-package all-the-icons-dired)
 
@@ -593,8 +595,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   (quote
-    (protobuf-mode php-mode hcl-mode git-link go-mode mode-icons yaml-mode js2-refactor rjsx-mode nyan-mode add-node-modules-path prettier-js rainbow-delimiters company-lsp lsp-ui lsp-mode company-quickhelp web-mode rg flycheck company ido-completing-read+ flx-ido smex expand-region undo-tree hl-todo diff-hl highlight-symbol multiple-cursors nginx-mode esup material-theme magit use-package which-key clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell))))
+   '(go-add-tags protobuf-mode php-mode hcl-mode git-link go-mode mode-icons yaml-mode js2-refactor rjsx-mode nyan-mode add-node-modules-path prettier-js rainbow-delimiters company-lsp lsp-ui lsp-mode company-quickhelp web-mode rg flycheck company ido-completing-read+ flx-ido smex expand-region undo-tree hl-todo diff-hl highlight-symbol multiple-cursors nginx-mode esup material-theme magit use-package which-key clojure-mode-extra-font-locking clojure-mode paredit exec-path-from-shell)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
